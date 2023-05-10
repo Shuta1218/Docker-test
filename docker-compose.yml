@@ -1,0 +1,56 @@
+version: '3'
+
+services:
+  app:
+      image: node:16.14.0
+      working_dir: /usr/src/app
+      tty: true
+      ports: 
+      - '3000:3000'
+      volumes:
+        - ./:/usr/src/app
+      command: >
+        bash -c "npm install &&
+        npm install nodemon -g &&
+        nodemon src/server.js"
+  php:
+    image: php:8.1-apache
+    volumes:
+      - .:/var/www/html
+    ports:
+      - 8008:80
+    container_name: php8.1
+  node:
+    build: .
+    volumes:
+      - ./:/usr/src/app
+    command: sh -c 'cd react-app && yarn start'
+    ports:
+      - '4000:3000'
+  mysqldb:
+    image: mysql:5.7
+    container_name: mysql5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: my_testdb
+      MYSQL_USER: hogehoge
+      MYSQL_PASSWORD: hoge
+      TZ: 'Asia/Tokyo' # TZ を environment に含める
+    volumes:
+      - ./docker/db/data:/var/lib/mysql  
+      - ./docker/db/my.cnf:/etc/mysql/conf.d/my.cnf
+      - ./docker/db/sql:/docker-entrypoint-initdb.d
+    ports:
+      - "3306:3306"
+    command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    depends_on:
+      - mysqldb
+    environment:
+      - PMA_ARBITRARY=1
+      - PMA_HOSTS='mysqldb'
+    ports:
+      - "3300:80"
+    volumes:
+      - ./docker/phpmyadmin/sessions:/sessions
