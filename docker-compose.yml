@@ -5,7 +5,7 @@ services:
       image: node:16.14.0
       working_dir: /usr/src/app
       tty: true
-      ports: 
+      ports:
       - '3000:3000'
       volumes:
         - ./:/usr/src/app
@@ -23,8 +23,8 @@ services:
   node:
     build: .
     volumes:
-      - ./:/usr/src/app
-    command: sh -c 'cd react-app && yarn start'
+      - ./app/react-app:/usr/src/app
+    command: sh -c 'yarn start'
     ports:
       - '4000:3000'
   mysqldb:
@@ -37,7 +37,7 @@ services:
       MYSQL_PASSWORD: hoge
       TZ: 'Asia/Tokyo' # TZ を environment に含める
     volumes:
-      - ./docker/db/data:/var/lib/mysql  
+      - ./docker/db/data:/var/lib/mysql
       - ./docker/db/my.cnf:/etc/mysql/conf.d/my.cnf
       - ./docker/db/sql:/docker-entrypoint-initdb.d
     ports:
