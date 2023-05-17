@@ -13,6 +13,7 @@ services:
         bash -c "npm install &&
         npm install nodemon -g &&
         nodemon src/server.js"
+
   php:
     image: php:8.1-apache
     volumes:
@@ -27,9 +28,10 @@ services:
     command: sh -c 'yarn start'
     ports:
       - '4000:3000'
+
   mysqldb:
-    image: mysql:5.7
-    container_name: mysql5.7
+    image: mysql/mysql-server:latest
+    container_name: mysql
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: my_testdb
@@ -43,6 +45,7 @@ services:
     ports:
       - "3306:3306"
     command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
     depends_on:
