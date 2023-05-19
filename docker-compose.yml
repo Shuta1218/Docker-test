@@ -28,7 +28,7 @@ services:
     ports:
       - '4000:3000'
   mysqldb:
-    image: mysql:5.7
+    image: mysql/mysql-server:latest
     container_name: mysql5.7
     environment:
       MYSQL_ROOT_PASSWORD: root
